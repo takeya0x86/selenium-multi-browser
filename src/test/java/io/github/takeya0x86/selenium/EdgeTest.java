@@ -58,7 +58,7 @@ public class EdgeTest {
     driver.get("https://v4-alpha.getbootstrap.com/");
 
     Path screenShot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE).toPath();
-    Path dist = Paths.get("build", "ie.png");
+    Path dist = Paths.get("build", "edge.png");
     Files.copy(screenShot, dist);
 
     assertThat(Files.exists(dist), is(true));
