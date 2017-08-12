@@ -18,7 +18,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 /**
- * Firefox Desktop
+ * Firefox Desktop ESR
  */
 public class FirefoxLegacyTest {
 

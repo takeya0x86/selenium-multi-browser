@@ -20,7 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 
 /**
- * Google Chrome Desktop
+ * Microsoft Edge
  */
 public class EdgeTest {
 

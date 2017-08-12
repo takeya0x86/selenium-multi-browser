@@ -20,7 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 /**
- * Google Chrome Desktop
+ * Microsoft Internet Explorer
  */
 public class InternetExplorerTest {
 
