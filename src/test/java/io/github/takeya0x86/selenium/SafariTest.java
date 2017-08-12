@@ -8,6 +8,7 @@ import static org.junit.Assume.assumeTrue;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -57,7 +58,7 @@ public class SafariTest {
 
     Path screenShot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE).toPath();
     Path dist = Paths.get("build", "safari.png");
-    Files.copy(screenShot, dist);
+    Files.copy(screenShot, dist, StandardCopyOption.REPLACE_EXISTING);
 
     assertThat(Files.exists(dist), is(true));
   }
