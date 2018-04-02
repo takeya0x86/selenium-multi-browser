@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -28,10 +30,10 @@ public class ChromeHeadlessTest {
 
   @BeforeClass
   public static void setUpAll() throws Exception {
-    ChromeDriverManager.getInstance().setup();
+    WebDriverManager.chromedriver().setup();
 
-    ChromeOptions options = new ChromeOptions();
-    options.addArguments("headless", "disable-gpu");
+    ChromeOptions options = new ChromeOptions()
+        .setHeadless(true);
     driver = new ChromeDriver(options);
   }
 

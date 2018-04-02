@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +18,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 /**
  * Firefox Desktop
@@ -27,7 +29,7 @@ public class FirefoxTest {
 
   @BeforeClass
   public static void setUpAll() throws Exception {
-    FirefoxDriverManager.getInstance().setup();
+    WebDriverManager.firefoxdriver().setup();
 
     driver = new FirefoxDriver();
   }

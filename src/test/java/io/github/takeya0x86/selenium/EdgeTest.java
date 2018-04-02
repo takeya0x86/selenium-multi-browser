@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 import io.github.bonigarcia.wdm.EdgeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +31,7 @@ public class EdgeTest {
   @BeforeClass
   public static void setUpAll() throws Exception {
     assumeTrue(Platform.getCurrent().is(Platform.WINDOWS));
-    EdgeDriverManager.getInstance().setup();
+    WebDriverManager.edgedriver().setup();
 
     driver = new EdgeDriver();
   }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +31,7 @@ public class InternetExplorerTest {
   @BeforeClass
   public static void setUpAll() throws Exception {
     assumeTrue(Platform.getCurrent().is(Platform.WINDOWS));
-    InternetExplorerDriverManager.getInstance().arch32().setup();
+    WebDriverManager.iedriver().arch32().setup();
 
     driver = new InternetExplorerDriver();
   }

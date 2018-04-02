@@ -12,6 +12,7 @@ import java.nio.file.StandardCopyOption;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;

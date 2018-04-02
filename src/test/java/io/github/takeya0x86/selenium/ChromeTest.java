@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +28,7 @@ public class ChromeTest {
 
   @BeforeClass
   public static void setUpAll() throws Exception {
-    ChromeDriverManager.getInstance().setup();
+    WebDriverManager.chromedriver().setup();
 
     driver = new ChromeDriver();
   }
