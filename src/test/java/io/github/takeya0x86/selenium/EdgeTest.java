@@ -1,69 +1,26 @@
 package io.github.takeya0x86.selenium;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
-import io.github.bonigarcia.wdm.EdgeDriverManager;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import io.github.bonigarcia.SeleniumExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.edge.EdgeDriver;
 
 /**
  * Microsoft Edge
  */
-public class EdgeTest {
-
-  private static WebDriver driver = null;
-
-  @BeforeClass
-  public static void setUpAll() throws Exception {
-    assumeTrue(Platform.getCurrent().is(Platform.WINDOWS));
-    WebDriverManager.edgedriver().setup();
-
-    driver = new EdgeDriver();
-  }
-
-  @Before
-  public void setUp() throws Exception {
-    driver.manage().deleteAllCookies();
-  }
-
-  @AfterClass
-  public static void tearDownAll() throws Exception {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
+@ExtendWith(SeleniumExtension.class)
+@EnabledOnOs(WINDOWS)
+class EdgeTest {
 
   @Test
-  public void testGet() throws Exception {
-    driver.get("https://v4-alpha.getbootstrap.com/");
+  void testGet(EdgeDriver driver) {
+    driver.get("https://getbootstrap.com/");
 
-    assertThat(driver.getTitle(), containsString("Bootstrap"));
-  }
-
-  @Test
-  public void testTakeScreenShot() throws Exception {
-    driver.get("https://v4-alpha.getbootstrap.com/");
-
-    Path screenShot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE).toPath();
-    Path dist = Paths.get("build", "edge.png");
-    Files.copy(screenShot, dist, StandardCopyOption.REPLACE_EXISTING);
-
-    assertThat(Files.exists(dist), is(true));
+    assertTrue(driver.getTitle().contains("Bootstrap"));
   }
 
 }
