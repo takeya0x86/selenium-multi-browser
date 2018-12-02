@@ -1,7 +1,7 @@
 package io.github.takeya0x86.selenium;
 
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
@@ -37,9 +37,9 @@ class ChromeTest {
 
   @Test
   void testGet() {
-    driver.get("https://getbootstrap.com/");
+    driver.get("http://example.selenium.jp/reserveApp_Renewal/");
 
-    assertTrue(driver.getTitle().contains("Bootstrap"));
+    assertEquals("予約情報入力", driver.getTitle());
   }
 
 }
