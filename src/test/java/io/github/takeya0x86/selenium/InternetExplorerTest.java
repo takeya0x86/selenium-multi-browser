@@ -3,29 +3,42 @@ package io.github.takeya0x86.selenium;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
-import io.github.bonigarcia.SeleniumExtension;
-import io.github.bonigarcia.SeleniumJupiter;
-import io.github.bonigarcia.wdm.Architecture;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 /**
  * Microsoft Internet Explorer
  */
-@ExtendWith(SeleniumExtension.class)
 @EnabledOnOs(WINDOWS)
 class InternetExplorerTest {
 
+  private WebDriver driver;
+
   @BeforeAll
-  static void setUpAll() {
-    SeleniumJupiter.config().wdm().setArchitecture(Architecture.X32);
+  static void beforeAll() {
+    WebDriverManager.iedriver().arch32().setup();
+  }
+
+  @BeforeEach
+  void before() {
+    driver = new InternetExplorerDriver();
+  }
+
+  @AfterEach
+  void after() {
+    if (driver != null) {
+      driver.quit();
+    }
   }
 
   @Test
-  void testGet(InternetExplorerDriver driver) {
+  void testGet() {
     driver.get("https://getbootstrap.com/");
 
     assertTrue(driver.getTitle().contains("Bootstrap"));
