@@ -1,26 +1,33 @@
-package io.github.takeya0x86.selenium;
+package com.example.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 /**
- * Microsoft Edge
+ * Firefox Desktop Headless
  */
-@EnabledOnOs(WINDOWS)
-class EdgeTest {
+class FirefoxHeadlessTest {
 
   private WebDriver driver;
 
+  @BeforeAll
+  static void beforeAll() {
+    WebDriverManager.firefoxdriver().setup();
+  }
+
   @BeforeEach
   void before() {
-    driver = new EdgeDriver();
+    FirefoxOptions options = new FirefoxOptions()
+        .setHeadless(true);
+    driver = new FirefoxDriver(options);
   }
 
   @AfterEach

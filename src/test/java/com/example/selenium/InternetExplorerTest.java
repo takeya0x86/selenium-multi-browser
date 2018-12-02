@@ -1,4 +1,4 @@
-package io.github.takeya0x86.selenium;
+package com.example.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;

@@ -1,26 +1,30 @@
-package io.github.takeya0x86.selenium;
+package com.example.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.condition.OS.MAC;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
- * Safari Desktop
+ * Firefox Desktop
  */
-@EnabledOnOs(MAC)
-class SafariTest {
+class FirefoxTest {
 
   private WebDriver driver;
 
+  @BeforeAll
+  static void beforeAll() {
+    WebDriverManager.firefoxdriver().setup();
+  }
+
   @BeforeEach
   void before() {
-    driver = new SafariDriver();
+    driver = new FirefoxDriver();
   }
 
   @AfterEach

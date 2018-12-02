@@ -1,4 +1,5 @@
-package io.github.takeya0x86.selenium;
+package com.example.selenium;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,23 +9,23 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
- * Firefox Desktop
+ * Google Chrome Desktop
  */
-class FirefoxTest {
+class ChromeTest {
 
   private WebDriver driver;
 
   @BeforeAll
   static void beforeAll() {
-    WebDriverManager.firefoxdriver().setup();
+    WebDriverManager.chromedriver().setup();
   }
 
   @BeforeEach
   void before() {
-    driver = new FirefoxDriver();
+    driver = new ChromeDriver();
   }
 
   @AfterEach

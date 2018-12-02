@@ -1,33 +1,26 @@
-package io.github.takeya0x86.selenium;
+package com.example.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 
 /**
- * Google Chrome Desktop Headless
+ * Microsoft Edge
  */
-class ChromeHeadlessTest {
+@EnabledOnOs(WINDOWS)
+class EdgeTest {
 
   private WebDriver driver;
 
-  @BeforeAll
-  static void beforeAll() {
-    WebDriverManager.chromedriver().setup();
-  }
-
   @BeforeEach
   void before() {
-    ChromeOptions options = new ChromeOptions()
-        .setHeadless(true);
-    driver = new ChromeDriver(options);
+    driver = new EdgeDriver();
   }
 
   @AfterEach

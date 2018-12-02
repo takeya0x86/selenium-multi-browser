@@ -1,5 +1,4 @@
-package io.github.takeya0x86.selenium;
-
+package com.example.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,11 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 /**
- * Google Chrome Desktop
+ * Google Chrome Desktop Headless
  */
-class ChromeTest {
+class ChromeHeadlessTest {
 
   private WebDriver driver;
 
@@ -25,7 +25,9 @@ class ChromeTest {
 
   @BeforeEach
   void before() {
-    driver = new ChromeDriver();
+    ChromeOptions options = new ChromeOptions()
+        .setHeadless(true);
+    driver = new ChromeDriver(options);
   }
 
   @AfterEach
