@@ -40,6 +40,12 @@ class ChromeTest {
     driver.get("http://example.selenium.jp/reserveApp_Renewal/");
 
     assertEquals("予約情報入力", driver.getTitle());
+
+    ReservePage reservePage = new ReservePage(driver);
+
+    reservePage.agreeAndGotoNext();
+
+    assertEquals("お名前が指定されていません", reservePage.getErrorMessage());
   }
 
 }
