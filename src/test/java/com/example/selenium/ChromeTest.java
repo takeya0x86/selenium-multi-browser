@@ -46,6 +46,13 @@ class ChromeTest {
     reservePage.agreeAndGotoNext();
 
     assertEquals("お名前が指定されていません", reservePage.getErrorMessage());
+
+    reservePage.returnToIndex();
+
+    reservePage.inputGuestName("テスト太郎");
+    reservePage.agreeAndGotoNext();
+
+    assertEquals("宿泊日には、翌日以降の日付を指定してください。", reservePage.getErrorMessage());
   }
 
 }
