@@ -66,6 +66,13 @@ class ChromeTest {
     reservePage.agreeAndGotoNext();
     assertEquals("宿泊日には、3ヶ月以内のお日にちのみ指定できます。", reservePage.getErrorMessage());
 
+    reservePage.returnToIndex();
+
+    reservePage.inputReserveDate(LocalDate.now().plusDays(1), 1);
+    reservePage.inputHeadCount(0);
+    reservePage.agreeAndGotoNext();
+    assertEquals("人数が入力されていません。", reservePage.getErrorMessage());
+
   }
 
 }

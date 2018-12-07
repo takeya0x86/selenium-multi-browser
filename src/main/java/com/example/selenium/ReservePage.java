@@ -23,6 +23,11 @@ public class ReservePage {
     termSelect.selectByIndex(term);
   }
 
+  public void inputHeadCount(int count) {
+    Select termSelect = new Select(driver.findElement(By.id("headcount")));
+    termSelect.selectByIndex(count);
+  }
+
   public void inputGuestName(String guestName) {
     WebElement guestNameInput = driver.findElement(By.id("guestname"));
     guestNameInput.clear();
