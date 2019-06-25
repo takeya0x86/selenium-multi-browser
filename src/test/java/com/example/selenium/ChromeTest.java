@@ -37,8 +37,8 @@ class ChromeTest {
   @BeforeEach
   void before() {
     ChromeOptions options = new ChromeOptions();
-    // Map<String, String> mobileEmulation = ImmutableMap.of("deviceName", "iPhone X");
-    // options.setExperimentalOption("mobileEmulation", mobileEmulation);
+    Map<String, String> mobileEmulation = ImmutableMap.of("deviceName", "iPhone X");
+    options.setExperimentalOption("mobileEmulation", mobileEmulation);
     driver = new ChromeDriver(options);
   }
 
@@ -75,7 +75,7 @@ class ChromeTest {
     long width = contentSize.get("width");
     long height = contentSize.get("height");
     driver.executeCdpCommand("Emulation.setDeviceMetricsOverride",
-        ImmutableMap.of("mobile", false, "width", width, "height", height, "deviceScaleFactor", 1));
+        ImmutableMap.of("mobile", true, "width", width, "height", height, "deviceScaleFactor", 1));
 
     Map<String, Object> clip = ImmutableMap
         .of("x", 0, "y", 0, "width", width, "height", height, "scale", 1);
@@ -85,7 +85,7 @@ class ChromeTest {
     long clientWidth = visualViewport.get("clientWidth");
     long clientHeight = visualViewport.get("clientHeight");
     driver.executeCdpCommand("Emulation.setDeviceMetricsOverride",
-        ImmutableMap.of("mobile", false, "width", clientWidth, "height", clientHeight, "deviceScaleFactor", 1));
+        ImmutableMap.of("mobile", true, "width", clientWidth, "height", clientHeight, "deviceScaleFactor", 1));
 
     String base64 = (String) result.get("data");
 
