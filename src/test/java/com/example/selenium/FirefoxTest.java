@@ -12,9 +12,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 /**
  * Firefox Desktop
@@ -30,7 +31,9 @@ class FirefoxTest {
 
   @BeforeEach
   void before() {
-    driver = new FirefoxDriver();
+    FirefoxOptions options = new FirefoxOptions();
+    options.setLogLevel(FirefoxDriverLogLevel.TRACE);
+    driver = new FirefoxDriver(options);
   }
 
   @AfterEach
@@ -42,19 +45,10 @@ class FirefoxTest {
 
   @Test
   void testFullPageScreenshot() throws IOException {
-    driver.get("https://github.com/");
-    Path screenShot = driver.getScreenshotAs(OutputType.FILE).toPath();
+    driver.get("file:///Users/takeya/Desktop/screen/screen_x_long.html");
+    Path screenShot = driver.getFullPageScreenshotAs(OutputType.FILE).toPath();
     Files.copy(screenShot, Paths.get("sc01.png"), REPLACE_EXISTING);
 
-    screenShot = driver.getFullPageScreenshotAs(OutputType.FILE).toPath();
-    Files.copy(screenShot, Paths.get("sc02.png"), REPLACE_EXISTING);
-
-    driver.findElement(By.linkText("open source")).click();
-    screenShot = driver.getScreenshotAs(OutputType.FILE).toPath();
-    Files.copy(screenShot, Paths.get("sc03.png"), REPLACE_EXISTING);
-
-    screenShot = driver.getFullPageScreenshotAs(OutputType.FILE).toPath();
-    Files.copy(screenShot, Paths.get("sc04.png"), REPLACE_EXISTING);
   }
 
 
