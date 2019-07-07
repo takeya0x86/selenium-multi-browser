@@ -32,7 +32,7 @@ class FirefoxTest {
   @BeforeEach
   void before() {
     FirefoxOptions options = new FirefoxOptions();
-    options.setLogLevel(FirefoxDriverLogLevel.TRACE);
+    //options.setLogLevel(FirefoxDriverLogLevel.TRACE);
     driver = new FirefoxDriver(options);
   }
 
@@ -44,8 +44,9 @@ class FirefoxTest {
   }
 
   @Test
-  void testFullPageScreenshot() throws IOException {
-    driver.get("file:///Users/takeya/Desktop/screen/screen_x_long.html");
+  void testFullPageScreenshot() throws IOException, InterruptedException {
+    driver.get("https://the-internet.herokuapp.com/infinite_scroll");
+    Thread.sleep(3000);
     Path screenShot = driver.getFullPageScreenshotAs(OutputType.FILE).toPath();
     Files.copy(screenShot, Paths.get("sc01.png"), REPLACE_EXISTING);
 
