@@ -11,8 +11,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.network.Network;
 
 /**
  * Google Chrome Desktop
@@ -37,8 +42,8 @@ class ChromeTest {
   @BeforeEach
   void before() {
     ChromeOptions options = new ChromeOptions();
-    Map<String, String> mobileEmulation = ImmutableMap.of("deviceName", "iPhone X");
-    options.setExperimentalOption("mobileEmulation", mobileEmulation);
+//    Map<String, String> mobileEmulation = ImmutableMap.of("deviceName", "iPhone X");
+//    options.setExperimentalOption("mobileEmulation", mobileEmulation);
     driver = new ChromeDriver(options);
   }
 
@@ -49,6 +54,20 @@ class ChromeTest {
     }
   }
 
+  @Test
+  void testBasicAuth() {
+    try (DevTools devTools = driver.getDevTools()) {
+      devTools.createSession();
+      String usernamePassword = Base64.getMimeEncoder().encodeToString("admin:admin".getBytes());
+      devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+      devTools
+          .send(Network.setExtraHTTPHeaders(ImmutableMap.of("Authorization", "Basic " + usernamePassword)));
+      driver.get("https://the-internet.herokuapp.com/basic_auth");
+      assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
+    }
+  }
+
+  @Ignore
   @Test
   void testFullPageScreenshot() throws IOException {
     driver.get("https://github.com/");
@@ -92,6 +111,7 @@ class ChromeTest {
     return outputType.convertFromBase64Png(base64);
   }
 
+  @Ignore
   @Test
   void testGet() {
     driver.get("http://example.selenium.jp/reserveApp_Renewal/");
