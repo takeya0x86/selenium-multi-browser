@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-alpha-2'
     testImplementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '3.6.0'
+    testImplementation group: 'net.lightbody.bmp', name: 'browsermob-core', version: '2.1.5'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.4.2'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.4.2'
     testRuntimeOnly group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'

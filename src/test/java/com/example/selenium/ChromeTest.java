@@ -16,6 +16,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import jdk.nashorn.internal.ir.annotations.Ignore;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
+import net.lightbody.bmp.proxy.auth.AuthType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +38,8 @@ class ChromeTest {
 
   private ChromeDriver driver;
 
+  private BrowserMobProxy proxy;
+
   @BeforeAll
   static void beforeAll() {
     WebDriverManager.chromedriver().setup();
@@ -41,9 +47,10 @@ class ChromeTest {
 
   @BeforeEach
   void before() {
+    proxy = new BrowserMobProxyServer();
+    proxy.start();
     ChromeOptions options = new ChromeOptions();
-//    Map<String, String> mobileEmulation = ImmutableMap.of("deviceName", "iPhone X");
-//    options.setExperimentalOption("mobileEmulation", mobileEmulation);
+    options.setProxy(ClientUtil.createSeleniumProxy(proxy));
     driver = new ChromeDriver(options);
   }
 
@@ -51,6 +58,9 @@ class ChromeTest {
   void after() {
     if (driver != null) {
       driver.quit();
+    }
+    if (proxy != null) {
+      proxy.stop();
     }
   }
 
@@ -65,6 +75,14 @@ class ChromeTest {
       driver.get("https://the-internet.herokuapp.com/basic_auth");
       assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
     }
+  }
+
+  @Test
+  void testBasicAuthUsingProxy() {
+    proxy.autoAuthorization("the-internet.herokuapp.com", "admin", "admin", AuthType.BASIC);
+    driver.get("https://the-internet.herokuapp.com/basic_auth");
+    assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
+    proxy.stopAutoAuthorization("the-internet.herokuapp.com");
   }
 
   @Ignore
