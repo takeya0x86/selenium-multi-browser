@@ -85,6 +85,21 @@ class ChromeTest {
     proxy.stopAutoAuthorization("the-internet.herokuapp.com");
   }
 
+  @Test
+  void testHttpResponse() {
+    proxy.addResponseFilter((response, contents, messageInfo) -> {
+      if (response == null) {
+        return;
+      }
+      int status = response.getStatus().code();
+      String url = messageInfo.getUrl();
+      if (status >= 400) {
+        System.out.println("HTTP status error: " + url + ": " + status);
+      }
+    });
+    driver.get("https://the-internet.herokuapp.com");
+  }
+
   @Ignore
   @Test
   void testFullPageScreenshot() throws IOException {
