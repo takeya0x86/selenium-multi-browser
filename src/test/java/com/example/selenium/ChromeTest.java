@@ -15,7 +15,6 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
@@ -100,7 +99,6 @@ class ChromeTest {
     driver.get("https://the-internet.herokuapp.com");
   }
 
-  @Ignore
   @Test
   void testFullPageScreenshot() throws IOException {
     driver.get("https://github.com/");
@@ -144,7 +142,6 @@ class ChromeTest {
     return outputType.convertFromBase64Png(base64);
   }
 
-  @Ignore
   @Test
   void testGet() {
     driver.get("http://example.selenium.jp/reserveApp_Renewal/");
