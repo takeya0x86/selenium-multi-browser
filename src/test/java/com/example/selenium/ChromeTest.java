@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
@@ -29,6 +30,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.network.Network;
+import org.openqa.selenium.devtools.network.model.AuthChallengeResponse;
+import org.openqa.selenium.devtools.network.model.InterceptionStage;
+import org.openqa.selenium.devtools.network.model.RequestPattern;
+import org.openqa.selenium.devtools.network.model.ResourceType;
 
 /**
  * Google Chrome Desktop
@@ -49,7 +54,7 @@ class ChromeTest {
     proxy = new BrowserMobProxyServer();
     proxy.start();
     ChromeOptions options = new ChromeOptions();
-    options.setProxy(ClientUtil.createSeleniumProxy(proxy));
+    //options.setProxy(ClientUtil.createSeleniumProxy(proxy));
     driver = new ChromeDriver(options);
   }
 
@@ -71,6 +76,44 @@ class ChromeTest {
       devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
       devTools
           .send(Network.setExtraHTTPHeaders(ImmutableMap.of("Authorization", "Basic " + usernamePassword)));
+      driver.get("https://the-internet.herokuapp.com/basic_auth");
+      assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
+    }
+  }
+
+  @Test
+  void testBasicAuthUsingDevTools() {
+    try (final DevTools devTools = driver.getDevTools()) {
+      devTools.createSession();
+      // devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+      devTools.addListener(Network.requestIntercepted(), (req) -> {
+        System.out.println("============");
+        System.out.println(req.getAuthChallenge());
+        System.out.println("============");
+        AuthChallengeResponse auth = new AuthChallengeResponse("ProvideCredentials", "admin", "admin");
+        if (req.getAuthChallenge() != null) {
+
+          devTools.send(Network.continueInterceptedRequest(
+              req.getInterceptionId(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.of(auth)));
+        } else {
+          devTools.send(Network.continueInterceptedRequest(req.getInterceptionId(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.empty(),
+              Optional.of(auth)));
+        }
+      });
+      devTools.send(Network.setRequestInterception(Arrays.asList(new RequestPattern("*", ResourceType.Document, InterceptionStage.Request))));
       driver.get("https://the-internet.herokuapp.com/basic_auth");
       assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
     }
