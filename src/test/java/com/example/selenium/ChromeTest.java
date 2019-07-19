@@ -26,14 +26,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.network.Network;
-import org.openqa.selenium.devtools.network.model.AuthChallengeResponse;
-import org.openqa.selenium.devtools.network.model.InterceptionStage;
-import org.openqa.selenium.devtools.network.model.RequestPattern;
-import org.openqa.selenium.devtools.network.model.ResourceType;
+import org.openqa.selenium.devtools.network.model.*;
 
 /**
  * Google Chrome Desktop
@@ -54,7 +52,8 @@ class ChromeTest {
     proxy = new BrowserMobProxyServer();
     proxy.start();
     ChromeOptions options = new ChromeOptions();
-    //options.setProxy(ClientUtil.createSeleniumProxy(proxy));
+    //Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+    //options.setProxy(seleniumProxy);
     driver = new ChromeDriver(options);
   }
 
@@ -69,6 +68,25 @@ class ChromeTest {
   }
 
   @Test
+  void testNetworkTraffic() {
+    try (DevTools devTools = driver.getDevTools()) {
+      devTools.createSession();
+      devTools.addListener(Network.responseReceived(), (responseReceived -> {
+
+        Response response = responseReceived.getResponse();
+        System.out.println(response.getUrl());
+        System.out.println(response.getStatus());
+        System.out.println(responseReceived.getType());
+        System.out.println(response.getEncodedDataLength());
+        System.out.println(response.getTiming());
+        System.out.println(response.getSecurityDetails().getProtocol());
+      }));
+      devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+      driver.get("https://the-internet.herokuapp.com/");
+    }
+  }
+
+  @Test
   void testBasicAuth() {
     try (DevTools devTools = driver.getDevTools()) {
       devTools.createSession();
@@ -76,44 +94,6 @@ class ChromeTest {
       devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
       devTools
           .send(Network.setExtraHTTPHeaders(ImmutableMap.of("Authorization", "Basic " + usernamePassword)));
-      driver.get("https://the-internet.herokuapp.com/basic_auth");
-      assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
-    }
-  }
-
-  @Test
-  void testBasicAuthUsingDevTools() {
-    try (final DevTools devTools = driver.getDevTools()) {
-      devTools.createSession();
-      // devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
-      devTools.addListener(Network.requestIntercepted(), (req) -> {
-        System.out.println("============");
-        System.out.println(req.getAuthChallenge());
-        System.out.println("============");
-        AuthChallengeResponse auth = new AuthChallengeResponse("ProvideCredentials", "admin", "admin");
-        if (req.getAuthChallenge() != null) {
-
-          devTools.send(Network.continueInterceptedRequest(
-              req.getInterceptionId(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.of(auth)));
-        } else {
-          devTools.send(Network.continueInterceptedRequest(req.getInterceptionId(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.empty(),
-              Optional.of(auth)));
-        }
-      });
-      devTools.send(Network.setRequestInterception(Arrays.asList(new RequestPattern("*", ResourceType.Document, InterceptionStage.Request))));
       driver.get("https://the-internet.herokuapp.com/basic_auth");
       assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
     }
