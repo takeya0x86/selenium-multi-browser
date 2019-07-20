@@ -3,6 +3,7 @@ package com.example.selenium;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.google.common.collect.ImmutableMap;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -72,17 +73,12 @@ class ChromeTest {
     try (DevTools devTools = driver.getDevTools()) {
       devTools.createSession();
       devTools.addListener(Network.responseReceived(), (responseReceived -> {
-
-        Response response = responseReceived.getResponse();
-        System.out.println(response.getUrl());
-        System.out.println(response.getStatus());
-        System.out.println(responseReceived.getType());
-        System.out.println(response.getEncodedDataLength());
-        System.out.println(response.getTiming());
-        System.out.println(response.getSecurityDetails().getProtocol());
+        assertNotNull(responseReceived);
+        assertNotNull(responseReceived.getResponse());
+        assertNotNull(responseReceived.getResponse().getTiming());  // failed
       }));
       devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
-      driver.get("https://the-internet.herokuapp.com/");
+      driver.get("https://www.seleniumhq.org/");
     }
   }
 
