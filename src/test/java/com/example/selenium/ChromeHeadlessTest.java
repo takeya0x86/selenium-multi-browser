@@ -25,7 +25,7 @@ class ChromeHeadlessTest {
 
   @BeforeEach
   void before() {
-    ChromeOptions options = new ChromeOptions()
+    var options = new ChromeOptions()
         .setHeadless(true);
     driver = new ChromeDriver(options);
   }

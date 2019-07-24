@@ -40,7 +40,7 @@ class FirefoxTest {
   void before() {
     proxy = new BrowserMobProxyServer();
     proxy.start();
-    FirefoxOptions options = new FirefoxOptions();
+    var options = new FirefoxOptions();
     options.setProxy(ClientUtil.createSeleniumProxy(proxy));
     driver = new FirefoxDriver(options);
   }
@@ -67,7 +67,7 @@ class FirefoxTest {
   void testFullPageScreenshot() throws IOException, InterruptedException {
     driver.get("https://the-internet.herokuapp.com/infinite_scroll");
     Thread.sleep(3000);
-    Path screenShot = driver.getFullPageScreenshotAs(OutputType.FILE).toPath();
+    var screenShot = driver.getFullPageScreenshotAs(OutputType.FILE).toPath();
     Files.copy(screenShot, Paths.get("sc01.png"), REPLACE_EXISTING);
   }
 

@@ -25,7 +25,7 @@ class FirefoxHeadlessTest {
 
   @BeforeEach
   void before() {
-    FirefoxOptions options = new FirefoxOptions()
+    var options = new FirefoxOptions()
         .setHeadless(true);
     driver = new FirefoxDriver(options);
   }

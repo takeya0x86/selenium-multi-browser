@@ -21,7 +21,7 @@ class FirefoxRemoteTest {
 
   @BeforeEach
   void before() throws Exception {
-    FirefoxOptions options = new FirefoxOptions();
+    var options = new FirefoxOptions();
     options.setCapability("zal:name", "STAR-HOTEL-E2ETest-firefox");
     options.setCapability("zal:build", "#1");
     driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), options);

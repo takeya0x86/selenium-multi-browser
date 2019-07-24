@@ -52,8 +52,8 @@ class ChromeTest {
   void before() {
     proxy = new BrowserMobProxyServer();
     proxy.start();
-    ChromeOptions options = new ChromeOptions();
-    //Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+    var options = new ChromeOptions();
+    //var seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
     //options.setProxy(seleniumProxy);
     driver = new ChromeDriver(options);
   }
@@ -70,7 +70,7 @@ class ChromeTest {
 
   @Test
   void testNetworkTraffic() {
-    try (DevTools devTools = driver.getDevTools()) {
+    try (var devTools = driver.getDevTools()) {
       devTools.createSession();
       devTools.addListener(Network.responseReceived(), (responseReceived -> {
         assertNotNull(responseReceived);
@@ -86,7 +86,7 @@ class ChromeTest {
   void testBasicAuth() {
     try (DevTools devTools = driver.getDevTools()) {
       devTools.createSession();
-      String usernamePassword = Base64.getMimeEncoder().encodeToString("admin:admin".getBytes());
+      var usernamePassword = Base64.getMimeEncoder().encodeToString("admin:admin".getBytes());
       devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
       devTools
           .send(Network.setExtraHTTPHeaders(ImmutableMap.of("Authorization", "Basic " + usernamePassword)));
@@ -109,8 +109,8 @@ class ChromeTest {
       if (response == null) {
         return;
       }
-      int status = response.getStatus().code();
-      String url = messageInfo.getUrl();
+      var status = response.getStatus().code();
+      var url = messageInfo.getUrl();
       if (status >= 400) {
         System.out.println("HTTP status error: " + url + ": " + status);
       }
@@ -121,7 +121,7 @@ class ChromeTest {
   @Test
   void testFullPageScreenshot() throws IOException {
     driver.get("https://github.com/");
-    Path screenShot = driver.getScreenshotAs(OutputType.FILE).toPath();
+    var screenShot = driver.getScreenshotAs(OutputType.FILE).toPath();
     Files.copy(screenShot, Paths.get("sc01.png"), REPLACE_EXISTING);
 
     screenShot = getFullPageScreenshotAs(OutputType.FILE).toPath();
@@ -137,26 +137,24 @@ class ChromeTest {
 
   @SuppressWarnings("unchecked")
   public <X> X getFullPageScreenshotAs(OutputType<X> outputType) {
-    Map<String, Object> layoutMetrics = driver
-        .executeCdpCommand("Page.getLayoutMetrics", Collections.emptyMap());
+    var layoutMetrics = driver.executeCdpCommand("Page.getLayoutMetrics", Collections.emptyMap());
 
-    Map<String, Long> contentSize = (Map<String, Long>) layoutMetrics.get("contentSize");
-    long width = contentSize.get("width");
-    long height = contentSize.get("height");
+    var contentSize = (Map<String, Long>) layoutMetrics.get("contentSize");
+    var width = contentSize.get("width");
+    var height = contentSize.get("height");
     driver.executeCdpCommand("Emulation.setDeviceMetricsOverride",
         ImmutableMap.of("mobile", true, "width", width, "height", height, "deviceScaleFactor", 1));
 
-    Map<String, Object> clip = ImmutableMap
-        .of("x", 0, "y", 0, "width", width, "height", height, "scale", 1);
-    Map<String, Object> result = driver.executeCdpCommand("Page.captureScreenshot", ImmutableMap.of("clip", clip));
+    var clip = ImmutableMap.of("x", 0, "y", 0, "width", width, "height", height, "scale", 1);
+    var result = driver.executeCdpCommand("Page.captureScreenshot", ImmutableMap.of("clip", clip));
 
-    Map<String, Long> visualViewport = (Map<String, Long>) layoutMetrics.get("layoutViewport");
-    long clientWidth = visualViewport.get("clientWidth");
-    long clientHeight = visualViewport.get("clientHeight");
+    var visualViewport = (Map<String, Long>) layoutMetrics.get("layoutViewport");
+    var clientWidth = visualViewport.get("clientWidth");
+    var clientHeight = visualViewport.get("clientHeight");
     driver.executeCdpCommand("Emulation.setDeviceMetricsOverride",
         ImmutableMap.of("mobile", true, "width", clientWidth, "height", clientHeight, "deviceScaleFactor", 1));
 
-    String base64 = (String) result.get("data");
+    var base64 = (String) result.get("data");
 
     return outputType.convertFromBase64Png(base64);
   }
@@ -167,7 +165,7 @@ class ChromeTest {
 
     assertEquals("予約情報入力", driver.getTitle());
 
-    ReservePage reservePage = new ReservePage(driver);
+    var reservePage = new ReservePage(driver);
 
     reservePage.agreeAndGotoNext();
 

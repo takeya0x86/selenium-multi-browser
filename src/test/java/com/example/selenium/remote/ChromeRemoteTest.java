@@ -20,7 +20,7 @@ class ChromeRemoteTest {
 
   @BeforeEach
   void before() throws Exception {
-    ChromeOptions options = new ChromeOptions();
+    var options = new ChromeOptions();
     options.addArguments("lang=ja");
     options.setCapability("zal:name", "STAR-HOTEL-E2ETest-chrome");
     options.setCapability("zal:build", "#1");
