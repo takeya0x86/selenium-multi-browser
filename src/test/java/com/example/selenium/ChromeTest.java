@@ -1,6 +1,5 @@
 package com.example.selenium;
 
-
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import com.google.common.collect.ImmutableMap;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
@@ -27,12 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.network.Network;
-import org.openqa.selenium.devtools.network.model.*;
 
 /**
  * Google Chrome Desktop
@@ -49,12 +45,13 @@ class ChromeTest {
   }
 
   @BeforeEach
-  void before() {
+  void before() throws Exception {
     proxy = new BrowserMobProxyServer();
+    proxy.setChainedProxy(new InetSocketAddress(InetAddress.getByName("192.0.2.0"), 3128));
+    proxy.chainedProxyAuthorization("admin", "admin", AuthType.BASIC);
     proxy.start();
     var options = new ChromeOptions();
-    //var seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
-    //options.setProxy(seleniumProxy);
+    options.setProxy(ClientUtil.createSeleniumProxy(proxy));
     driver = new ChromeDriver(options);
   }
 
@@ -84,12 +81,13 @@ class ChromeTest {
 
   @Test
   void testBasicAuth() {
-    try (DevTools devTools = driver.getDevTools()) {
+    try (var devTools = driver.getDevTools()) {
       devTools.createSession();
       var usernamePassword = Base64.getMimeEncoder().encodeToString("admin:admin".getBytes());
       devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
       devTools
-          .send(Network.setExtraHTTPHeaders(ImmutableMap.of("Authorization", "Basic " + usernamePassword)));
+          .send(Network
+              .setExtraHTTPHeaders(ImmutableMap.of("Authorization", "Basic " + usernamePassword)));
       driver.get("https://the-internet.herokuapp.com/basic_auth");
       assertEquals("Basic Auth", driver.findElement(By.tagName("h3")).getText());
     }
@@ -152,7 +150,9 @@ class ChromeTest {
     var clientWidth = visualViewport.get("clientWidth");
     var clientHeight = visualViewport.get("clientHeight");
     driver.executeCdpCommand("Emulation.setDeviceMetricsOverride",
-        ImmutableMap.of("mobile", true, "width", clientWidth, "height", clientHeight, "deviceScaleFactor", 1));
+        ImmutableMap
+            .of("mobile", true, "width", clientWidth, "height", clientHeight, "deviceScaleFactor",
+                1));
 
     var base64 = (String) result.get("data");
 
